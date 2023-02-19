@@ -1,0 +1,63 @@
+body {
+    background-color: white;
+}
+
+.health-punch {
+    width: 300px;
+    display: block;
+    margin: 1.5vh;
+}
+
+input {
+    box-sizing: border-box;
+}
+
+.problem {
+    display: block;
+    margin: 1.5vh;
+}
+
+.discussions {
+    margin-left: 15px;
+}
+
+.reply-photo {
+    /* opacity: 0.4; */
+    width: 30px;
+    height: 30px;
+    position: relative;
+    top: 8px;
+    margin-right: 8px;
+}
+
+.reply-button {
+    width: 80px;
+    display: inline;
+    font-size: smaller;
+}
+
+.profile-photo {
+    width: 38px;
+    height: 38px;
+    border-radius: 15%;
+    position: relative;
+    top: 12px;
+    margin-right: 10px;
+}
+
+.discussion-title {
+    font-weight: bold;
+}
+
+.ip {
+    position: relative;
+    margin-left: 10px;
+    margin-right: 10px;
+    font-size: small;
+    color: gray;
+}
+
+footer {
+    width: 100%;
+    text-align: center;
+}

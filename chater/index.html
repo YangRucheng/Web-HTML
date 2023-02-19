@@ -1,0 +1,37 @@
+<meta charset="UTF-8">
+
+<body>
+    <div id="iframe" hidden="true"
+        style="position: fixed; z-index: 999; background-color: white; width: 40vw; height: 48vh; left: 30vw; top: 20vh;">
+        <iframe src="../account"
+            style="width: 100%; height: 100%; border: 1px solid gray; border-radius: 1vw;"></iframe>
+    </div>
+
+
+    <h1>WebSocket Chat</h1>
+    <form action="" onsubmit="sendMessage(event)">
+        <input type="text" id="messageText" autocomplete="off" />
+        <button>Send</button>
+    </form>
+    <ul id='messages'> </ul>
+    <button onclick="connect()">websocket连接</button>
+
+
+    <script src="https://unpkg.com/vue@3/dist/vue.global.prod.js"></script>
+    <script src="https://unpkg.com/axios/dist/axios.min.js"></script>
+    <script src="./chat.js"></script>
+    <script>
+        window.addEventListener('message', function (e) {
+            if (e.data === 'close') {
+                document.getElementById('iframe').hidden = true;
+            }
+        });
+
+        getInfo().then(function (data) {
+            console.log("登陆态检查", data)
+            if (data.status != 0) {
+                document.getElementById("iframe").hidden = false;
+            }
+        })
+    </script>
+</body>

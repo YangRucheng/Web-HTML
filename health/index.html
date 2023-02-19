@@ -1,0 +1,223 @@
+<!DOCTYPE html>
+<meta charset="UTF-8">
+
+<head>
+    <meta charset="UTF-8">
+    <meta itemprop="name" content="XTU 形式主义 - 健康打卡">
+    <meta itemprop="Description" content="博学笃行、盛德日新">
+    <title>XTU健康打卡 - 形式主义 | Powered By YRC</title>
+    <link rel="stylesheet" href="./css/danmaku.css">
+    <link rel="stylesheet" href="https://unpkg.com/element-ui/lib/theme-chalk/index.css">
+    <style type="text/css">
+        #loading {
+            position: fixed;
+            background-color: #FFF;
+            top: 0px;
+            left: 0px;
+            width: 100%;
+            height: 100%;
+            z-index: 9999;
+        }
+
+        #loading_background {
+            background-color: rgba(0, 0, 0, 0.7);
+        }
+
+        .loader {
+            width: 250px;
+            height: 50px;
+            line-height: 50px;
+            text-align: center;
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            -webkit-transform: translate(-50%, -50%);
+            transform: translate(-50%, -50%);
+            font-family: helvetica, arial, sans-serif;
+            text-transform: uppercase;
+            font-weight: 900;
+            color: #ce4233;
+            letter-spacing: 0.2em;
+        }
+
+        .loader::before,
+        .loader::after {
+            content: "";
+            display: block;
+            width: 15px;
+            height: 15px;
+            background: #ce4233;
+            position: absolute;
+            -webkit-animation: load .7s infinite alternate ease-in-out;
+            animation: load .7s infinite alternate ease-in-out;
+        }
+
+        .loader::before {
+            top: 0;
+        }
+
+        .loader::after {
+            bottom: 0;
+        }
+
+        @-webkit-keyframes load {
+            0% {
+                left: 0;
+                height: 30px;
+                width: 15px;
+            }
+
+            50% {
+                height: 8px;
+                width: 40px;
+            }
+
+            100% {
+                left: 235px;
+                height: 30px;
+                width: 15px;
+            }
+        }
+
+        @keyframes load {
+            0% {
+                left: 0;
+                height: 30px;
+                width: 15px;
+            }
+
+            50% {
+                height: 8px;
+                width: 40px;
+            }
+
+            100% {
+                left: 235px;
+                height: 30px;
+                width: 15px;
+            }
+        }
+    </style>
+</head>
+
+<body>
+    <h1 class="center">
+        <p>XTU</p>
+        <p>形式主义 - 健康打卡</p>
+        <p>已停止维护</p>
+    </h1>
+    <br>
+
+    <!-- 单人打卡 -->
+    <div id="single" class="domain">
+        <h2>单人打卡</h2>
+        <input class="health-punch" placeholder="学号 - 必填, 错误的学号也会显示成功!" v-model="stId">
+        <input class="health-punch" placeholder="姓名 - 非必填, 可随机生成!" v-model="stName">
+        <input class="health-punch" placeholder="湘大校园手机号 - 非必填, 可随机生成!" v-model="stMobile">
+        <input class="health-punch" placeholder="打卡结果 - 错误的学号也会显示成功!" readonly="readonly" v-model="output">
+        <button class="health-punch" type="button" @click="punch_single()">一键打卡 Button | 单人</button>
+    </div>
+    <!-- 班级打卡 -->
+    <div id="class" class="domain">
+        <h2>班级打卡</h2>
+        <input class="health-punch" placeholder="学号 - 必填, 随便填班级内任意一个学号, 可用#号分隔多个班级!" v-model="stId">
+        <input class="health-punch" placeholder="打卡结果 - 请自行在console查看每人打卡结果!" readonly="readonly" v-model="output">
+        <button class="health-punch" type="button" @click="punch_class()">一键打卡 Button | 批量</button>
+    </div>
+    <!-- 解析BOT消息 -->
+    <div id="bot" class="domain">
+        <h3>> 计网院BOT文本解析打卡</h3>
+        <input class="health-punch" placeholder="复制并输入计网院BOT发送的未打卡名单" v-model="text">
+        <input class="health-punch" placeholder="打卡结果 - 请自行在console查看每人打卡结果!" readonly="readonly" v-model="output">
+        <button class="health-punch" type="button" @click="punch_bot()">一键打卡 Button | 解析</button>
+    </div>
+    <!-- 可选数据 -->
+    <div class="domain">
+        <h3>> 可选数据</h3>
+        <input class="health-punch" placeholder="所在地 - 默认湘潭大学!">
+        <input class="health-punch" placeholder="健康码状态 - 默认绿码!">
+        <input class="health-punch" placeholder="出现的症状 - 默认自觉正常!">
+        <input class="health-punch" placeholder="今日体温 - 默认36度!">
+    </div>
+    <!-- 疑问解释 -->
+    <div class="domain">
+        <h3>> 一些疑问</h3>
+        <span class="problem">博学笃行、盛德日新</span>
+        <span class="problem">[问]为什么错误的学号也能成功?</span>
+        <span class="problem">[答]这得问湘大校园的开发者了 ~</span>
+        <span class="problem">[问]批量提交有什么区别?</span>
+        <span class="problem">[答]没区别, 只是逐一提交班内的每个学号, 应该没有班级人数超过40的吧 ~</span>
+        <span class="problem">[问]界面为什么这么丑?</span>
+        <span class="problem">[答]因为随时可能关闭, 没必要写得太复杂</span>
+        <span class="problem">[问]有没有定时自动打卡?</span>
+        <span class="problem">[答]此功能仅向QQ[3512789889]的好友提供, 私聊发送[健康打卡添加]可使用</span>
+    </div class="domain">
+    <!-- 留言区 -->
+    <div id="discuss">
+        <h3>> 留言区</h3>
+        <input class="health-punch" placeholder="留言内容 - 必填" v-model="text">
+        <input class="health-punch" placeholder="QQ号 - 必填, 用于显示头像!" v-model="qq">
+        <input class="health-punch" placeholder="昵称 - 非必填, 默认游客, 游客无法删除留言!" v-model="nickname">
+        <input class="health-punch" placeholder="邮箱 - 非必填, 仅管理员可见!" v-model="email">
+        <button class="health-punch" type="button" @click="addDiscuss()">单独提交留言</button>
+        <button class="health-punch" type="button" @click="addDiscuss(-1)">回复留言</button>
+        <div id="danmakues"></div> <!-- 弹幕 -->
+        <div class="discussions">
+            <div v-for="item in discussions" class="discussion" :id="`discussion-${item.id}`">
+                <img src="./img/reply.png" :style="item.styleIcon" class="reply-photo" alt="">
+                <img v-if="item.qq!=0" :src="`https://q1.qlogo.cn/g?b=qq&nk=${item.qq}&s=100`" class="profile-photo"
+                    alt="头像加载失败">
+                <img v-else="item.qq!=0" src="./img/admin-photo.jpg" class="profile-photo" alt="头像加载失败">
+                <span class="discussion-title">
+                    <span :style="item.ip=='0.0.0.0'?'color: red;':''">{{item.nickname}}</span>
+                    <span>{{item.replyName}}</span>
+                </span>
+                <p :style="item.styleText">
+                    <span>{{item.text}}</span>
+                    <span class="ip"><br>IP: {{item.ip}}</span>
+                    <span class="ip">{{item.city}}</span>
+                    <span class="ip" v-if="item.device"><br>{{item.device.replaceAll('Windows 10',
+                        'Windows 10/11').replaceAll(' ','&nbsp;')}}</span>
+                    <button class="reply-button" type="button" @click="addDiscuss(item.id)">回复TA</button>
+                </p>
+            </div>
+        </div>
+    </div>
+    <!-- 加载动画 -->
+    <div id="loading">
+        <div id="loading_background">
+            <div class="loader">Loading...</div>
+        </div>
+    </div>
+
+    <!-- 尾注 -->
+    <footer class="center">
+        <br><br><br>
+        <p>
+            <span>Copyright &copy; 2023. YangRucheng All rights reserved.</span>
+            <a target="_blank" href="https://beian.miit.gov.cn">湘ICP备2022020305号</a>
+            <a target="_blank" href="https://icp.gov.moe/?keyword=20230036">萌ICP备20230036号</a>
+        </p>
+        <p>侵权请在留言区留言, 谢谢合作!</p>
+    </footer>
+
+    <script src="https://unpkg.com/vue@3/dist/vue.global.prod.js"></script>
+    <script src="https://unpkg.com/element-ui/lib/index.js"></script>
+    <script src="https://unpkg.com/axios/dist/axios.min.js"></script>
+    <script src="./js/static/ua-parser.js"></script>
+    
+    <script src="./js/health.js"></script>
+    <script src="./js/discuss.js"></script>
+
+    <script type="text/javascript"> //根据UA加载手机端与电脑端不同的CSS
+        if ((navigator.userAgent.match(/(phone|pad|pod|iPhone|iPod|ios|iPad|Android|wOSBrowser|BrowserNG|WebOS)/i))) { //移动端
+            document.write('<link href="./css/mobile.css" rel="stylesheet" type="text/css" media="screen" />');
+            document.write('<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">') //禁用缩放
+        }
+        else { //桌面端
+            document.write('<link href="./css/desktop.css" rel="stylesheet" type="text/css" media="screen" />');
+        }
+    </script>
+</body>
+
+</html>
