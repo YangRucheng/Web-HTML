@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html lang="zh">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="shortcut icon" href="./favicon.ico" type="image/x-icon">
+    <title>控制台 | 短链接生成</title>
+</head>
+
+<body>
+    <h2>短链接生成控制台</h2>
+    <p></p>
+    <p>添加重定向</p>
+    <p>
+        <input placeholder="请输入长链接..." style="width: 300px;" id="input_url">
+        <button type="button" id="submit">生成</button>
+    </p>
+    <p>
+        <input placeholder="短链接" style="width: 300px;" readonly="readonly" id="output_url"></input>
+        <button type="button" id="copy">复制</button>
+    </p>
+
+    <br>
+    <footer>
+        <span>Copyright &copy; 2022.YangRucheng All rights reserved.</span>
+        <a target="_blank" href="https://beian.miit.gov.cn">湘ICP备2022020305号</a>
+    </footer>
+
+    <script>
+        document.getElementById("submit").addEventListener("click", async () => {
+
+            const url_input = document.getElementById("input_url").value.trim();
+            const url_request = `https://re.yangrucheng.top/add?url=${url_input}`;
+
+            const response = await fetch(url_request);
+            const data = await response.json();
+            console.log("请求成功", data);
+
+            document.getElementById("output_url").value = data.url;
+
+            alert(data.msg);
+        })
+
+        document.getElementById("copy").addEventListener("click", async () => {
+            var output = document.getElementById(id);
+            if (output.value.trim() != "") {
+                output.select(); // 选择对象
+                document.execCommand("Copy"); // 执行浏览器复制命令
+                console.log("已复制到剪切板: ", output.value.trim())
+                alert("已复制到剪切板: " + output.value.trim());
+            } else {
+                alert("你还没有生成短链接哦 ~")
+            }
+        })
+    </script>
+</body>
+
+</html>
