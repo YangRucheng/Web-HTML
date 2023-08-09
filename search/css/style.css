@@ -57,11 +57,11 @@ textarea {
 }
 .footer {
     height: 60px;
+    line-height: 60px;
+    font-size: 20px;
     text-align: center;
     margin-top: -60px; 
-    /* position: relative;
-    margin-top: -100px; 
-    clear:both; */
+    color: gray;
 }
 /* logo start  */
 .logo-box {
